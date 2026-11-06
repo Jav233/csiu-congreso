@@ -24,6 +24,19 @@ Hecho con **HTML, CSS y JavaScript**, sin servidor: funciona en GitHub Pages y s
 - Organizador: código `ORG-2026`
 - Expositor: código `EXP-1009` (Mg. Isabel Heredia)
 
+## Cómo publicar cambios
+
+Antes de subir, actualiza el número de versión para que los navegadores no muestren archivos viejos guardados en caché:
+
+```
+node actualizar-version.js
+git add -A
+git commit -m "Describe el cambio"
+git push
+```
+
+GitHub Pages se actualiza en 1 o 2 minutos.
+
 ## Notas del prototipo
 
 - Los datos del congreso están en `js/datos.js`.

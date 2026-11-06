@@ -38,11 +38,16 @@ const ROBOT_FAB = `<svg class="robot" viewBox="0 0 64 60" aria-hidden="true" foc
   <g class="robot__ojos"><ellipse cx="26" cy="32" rx="3.4" ry="4.3"/><ellipse cx="38" cy="32" rx="3.4" ry="4.3"/></g>
   <path class="robot__boca" d="M27.5 38.5 q4.5 3.6 9 0"/></svg>`;
 
+// Versión publicada (la pone actualizar-version.js en el HTML); evita que el
+// navegador use copias viejas de lo que se carga después (robot y sus estilos)
+const VERSION = (document.currentScript?.src.match(/[?&]v=([\w-]+)/) || [])[1] || '';
+const conVersion = (ruta) => (VERSION ? `${ruta}?v=${VERSION}` : ruta);
+
 function cargarScript(src) {
   return new Promise((ok, mal) => {
-    if (document.querySelector(`script[src="${src}"]`)) return ok();
+    if (document.querySelector(`script[src^="${src}"]`)) return ok();
     const s = document.createElement('script');
-    s.src = src; s.onload = ok; s.onerror = mal;
+    s.src = conVersion(src); s.onload = ok; s.onerror = mal;
     document.body.append(s);
   });
 }
@@ -56,7 +61,7 @@ async function abrirBot(pregunta = '') {
   }
 }
 function montarBotonBot() {
-  if (!document.querySelector('link[href="css/bot.css"]')) document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="css/bot.css">');
+  if (!document.querySelector('link[href^="css/bot.css"]')) document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${conVersion('css/bot.css')}">`);
   if (document.body.dataset.pagina === 'asistente') return;
   document.body.insertAdjacentHTML('beforeend',
     `<button class="bot-fab" type="button" data-bot aria-haspopup="dialog" aria-expanded="false" aria-label="Pregúntale a Xi, el asistente del congreso">
