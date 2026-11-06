@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Xi, asistente virtual · XI CSIU</title>
+  <meta name="description" content="Pregúntale a Xi qué hay a cierta hora, dónde es una charla o quién es un expositor del XI Congreso CSIU.">
+  <meta name="theme-color" content="#0b3a29">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/ruta.css">
+  <link rel="stylesheet" href="css/bot.css">
+</head>
+<body data-pagina="asistente">
+  <main id="main" class="wrap">
+    <div class="page-head">
+      <h1>Asistente virtual</h1>
+      <p>Pregúntale a Xi por horarios, lugares, expositores o temas.</p>
+    </div>
+    <section id="chat" aria-label="Conversación con Xi"></section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/ruta.js"></script>
+  <script src="js/bot-cerebro.js"></script>
+  <script src="js/bot.js"></script>
+  <script>
+    const chat = Bot.montar($('#chat'));
+    const q = new URLSearchParams(location.search).get('q');
+    if (q) chat.preguntar(q);
+  </script>
+</body>
+</html>

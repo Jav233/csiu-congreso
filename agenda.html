@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agenda · XI CSIU</title>
+  <meta name="description" content="Agenda del XI Congreso Internacional CSIU: conferencias, ponencias y talleres del 17 al 19 de noviembre de 2026.">
+  <meta name="theme-color" content="#0b3a29">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/ruta.css">
+  <link rel="stylesheet" href="css/agenda.css">
+</head>
+<body data-pagina="agenda">
+  <main id="main" class="wrap">
+    <div class="page-head ag-head">
+      <div>
+        <h1 id="agTitulo">Agenda</h1>
+        <p id="agSub">17 – 19 de noviembre de 2026 · Campus PUCE Ambato</p>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="btnVivo" type="button" aria-pressed="false" title="Muestra la agenda como si fueran las 11:40 del día elegido">Simular en vivo</button>
+    </div>
+
+    <div class="dias-wrap" id="diasWrap">
+      <div class="segmento dias" role="tablist" aria-label="Días del congreso" id="dias"></div>
+    </div>
+
+    <div class="filtros">
+      <label class="campo">
+        <i data-lucide="search"></i><span class="sr-only">Buscar</span>
+        <input id="q" type="search" placeholder="Buscar tema, expositor o institución" autocomplete="off">
+      </label>
+      <div class="filtros__fila" aria-label="Filtros">
+        <button class="toggle" id="fMias" type="button" aria-pressed="false"><i data-lucide="star"></i>Mi agenda <span class="cuenta" id="cuentaMias">0</span></button>
+        <label class="select"><span class="sr-only">Lugar</span><select id="fLugar"><option value="">Todos los lugares</option></select></label>
+        <label class="select"><span class="sr-only">Tipo</span><select id="fTipo"><option value="">Todos los tipos</option></select></label>
+        <label class="select"><span class="sr-only">Tema</span><select id="fArea"><option value="">Todos los temas</option></select></label>
+        <div class="segmento vista" role="group" aria-label="Vista">
+          <button type="button" data-vista="lista" aria-pressed="true"><i data-lucide="list"></i>Lista</button>
+          <button type="button" data-vista="grilla" aria-pressed="false"><i data-lucide="columns-3"></i>Por lugar</button>
+        </div>
+      </div>
+      <div class="resumen">
+        <p id="resumen" aria-live="polite"></p>
+        <button class="link" id="btnLimpiar" type="button" hidden>Limpiar filtros</button>
+      </div>
+    </div>
+
+    <div class="mis-acc" id="misAcc" hidden>
+      <button class="btn btn--secondary btn--sm" id="btnIcs" type="button"><i data-lucide="calendar-plus"></i>Añadir todo a mi calendario</button>
+    </div>
+
+    <section id="lista" class="lista" aria-labelledby="agTitulo"></section>
+    <section id="grilla" class="grilla" hidden></section>
+    <div id="vacio" class="vacio" hidden></div>
+  </main>
+
+  <dialog class="hoja" id="detalle" aria-labelledby="dTitulo">
+    <div class="hoja__scroll" id="detalleCard"></div>
+  </dialog>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/ruta.js"></script>
+  <script src="js/portadas.js"></script>
+  <script src="js/agenda.js"></script>
+</body>
+</html>

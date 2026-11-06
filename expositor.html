@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panel del expositor · XI CSIU</title>
+  <meta name="description" content="Panel para expositores del XI Congreso CSIU: tus actividades, semáforo de tiempo y certificado de ponente.">
+  <meta name="theme-color" content="#0b3a29">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/ruta.css">
+  <link rel="stylesheet" href="css/paneles.css">
+</head>
+<body data-pagina="expositor">
+  <main id="main" class="wrap">
+    <div class="page-head panel-head">
+      <div>
+        <h1>Panel del expositor</h1>
+        <p>Tus actividades, el semáforo de tiempo y tu certificado</p>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="btnSalir" type="button" hidden><i data-lucide="log-out"></i>Cerrar sesión</button>
+    </div>
+
+    <section class="acceso card" id="acceso" hidden>
+      <h2>Ingresa con tu código</h2>
+      <form class="form" id="formAcceso" novalidate>
+        <label>Código de acceso <small>lo envía el comité organizador</small>
+          <input id="codigoExp" type="text" autocomplete="off" autocapitalize="characters" placeholder="EXP-0000" required>
+        </label>
+        <p class="error" id="errAcceso" role="alert" hidden></p>
+        <button class="btn btn--primary" type="submit">Entrar</button>
+        <button class="btn btn--secondary" type="button" id="btnPruebaExp">Entrar como expositor de prueba</button>
+      </form>
+      <p class="aviso-demo"><i data-lucide="info"></i><span>Prototipo: el expositor de prueba es <strong>Mg. Isabel Heredia</strong> (código <strong>EXP-1009</strong>). Los códigos de todos los expositores se ven en el panel del organizador.</span></p>
+    </section>
+
+    <div id="panel" hidden></div>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/ruta.js"></script>
+  <script src="js/certificado.js"></script>
+  <script src="js/portadas.js"></script>
+  <script src="js/expositor.js"></script>
+</body>
+</html>

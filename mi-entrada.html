@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi entrada · XI CSIU</title>
+  <meta name="description" content="Tu entrada con código QR para el XI Congreso CSIU y tu certificado de asistencia.">
+  <meta name="theme-color" content="#0b3a29">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/paneles.css">
+</head>
+<body data-pagina="entrada">
+  <main id="main" class="wrap">
+    <div class="page-head">
+      <h1>Mi entrada</h1>
+      <p>Tu código QR para ingresar y tu certificado de asistencia</p>
+    </div>
+
+    <section class="acceso card" id="registro" hidden>
+      <h2>Obtén tu entrada</h2>
+      <form class="form" id="formEntrada" novalidate>
+        <label>Nombre completo <small>así aparecerá en tu certificado</small>
+          <input name="nombre" autocomplete="name" required maxlength="80">
+        </label>
+        <label>Institución <small>opcional</small>
+          <input name="institucion" autocomplete="organization" maxlength="100">
+        </label>
+        <p class="error" id="errEntrada" role="alert" hidden></p>
+        <button class="btn btn--primary" type="submit"><i data-lucide="ticket"></i>Generar mi entrada</button>
+      </form>
+      <p class="aviso-demo"><i data-lucide="shield-check"></i><span>Tus datos se guardan solo en este dispositivo. No pedimos cédula ni contraseña.</span></p>
+    </section>
+
+    <div id="entrada" hidden></div>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/certificado.js"></script>
+  <script>
+    (function () {
+      function qrSvg(texto) {
+        if (typeof qrcode !== 'function') return '';
+        const q = qrcode(0, 'M'); q.addData(texto); q.make();
+        return q.createSvgTag({ cellSize: 6, margin: 2, scalable: true, alt: 'Código QR de tu entrada' });
+      }
+      function pintar() {
+        const e = Entradas.buscar(Entradas.mia() || '');
+        $('#registro').hidden = !!e;
+        $('#entrada').hidden = !e;
+        if (!e) { iconos(); return; }
+        const ev = CONGRESO.evento;
+        $('#entrada').innerHTML = `
+          <article class="entrada card">
+            <header class="entrada__cab"><small>${escapar(ev.corto)} · ${fechaDia(1).getDate()}–${fechaDia(ev.dias.length).getDate()} nov 2026</small><h2>Entrada general</h2></header>
+            <div class="entrada__qr">${qrSvg(e.codigo) || '<p class="muted">No se pudo dibujar el QR; muestra el código.</p>'}<p class="entrada__cod">${e.codigo}</p></div>
+            <div class="entrada__datos">
+              <strong>${escapar(e.nombre)}</strong>
+              ${e.institucion ? `<span class="muted">${escapar(e.institucion)}</span>` : ''}
+              <span>${e.checkin
+                ? `<span class="estado estado--ok"><i data-lucide="check-circle"></i>Ingreso registrado el ${new Date(e.checkin).toLocaleString('es-EC', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })}</span>`
+                : '<span class="muted">Muestra este código en el ingreso del congreso.</span>'}</span>
+            </div>
+            <div class="entrada__acc">
+              <button class="btn ${e.checkin ? 'btn--primary' : 'btn--secondary'}" type="button" id="btnCert" ${e.checkin ? '' : 'aria-disabled="true"'}><i data-lucide="award"></i>Certificado de asistencia</button>
+              ${e.checkin ? '' : '<p class="grafico__nota">El certificado se habilita cuando registran tu ingreso. Para probarlo: abre el <a class="link" href="organizador.html">panel del organizador</a> → Check-in.</p>'}
+              <a class="btn btn--secondary" href="agenda.html?mias=1"><i data-lucide="star"></i>Mi agenda</a>
+              <button class="btn btn--ghost btn--sm" type="button" id="btnBorrar">Eliminar mi entrada de este dispositivo</button>
+            </div>
+          </article>`;
+        iconos();
+        $('#btnCert').addEventListener('click', () => {
+          if (!e.checkin) { avisar('Primero deben registrar tu ingreso con este código'); return; }
+          Certificado.mostrar({
+            titulo: 'Certificado de asistencia',
+            nombre: e.nombre,
+            detalle: `${e.institucion ? `De <strong>${escapar(e.institucion)}</strong>, por` : 'Por'} su asistencia a las conferencias, ponencias y talleres del congreso.`,
+            codigo: e.codigo,
+          });
+        });
+        $('#btnBorrar').addEventListener('click', () => {
+          if (!confirm('¿Eliminar tu entrada de este dispositivo? Tendrás que generar otra.')) return;
+          almacen.set(Entradas.claveMia, null);
+          pintar();
+        });
+      }
+      $('#formEntrada').addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const f = Object.fromEntries(new FormData(ev.target));
+        if (f.nombre.trim().split(/\s+/).length < 2) {
+          const p = $('#errEntrada'); p.textContent = 'Escribe tu nombre y apellido.'; p.hidden = false;
+          ev.target.nombre.setAttribute('aria-invalid', 'true'); ev.target.nombre.focus(); return;
+        }
+        Entradas.crear(f.nombre.trim(), f.institucion.trim());
+        pintar();
+        avisar('¡Listo! Tu entrada fue generada');
+      });
+      pintar();
+    })();
+  </script>
+</body>
+</html>

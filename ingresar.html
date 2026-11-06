@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ingresar · XI CSIU</title>
+  <meta name="description" content="Acceso para asistentes, expositores y organizadores del XI Congreso CSIU.">
+  <meta name="theme-color" content="#0b3a29">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/paneles.css">
+</head>
+<body data-pagina="ingresar">
+  <main id="main" class="wrap">
+    <div class="page-head">
+      <h1>Ingresar</h1>
+      <p>Elige cómo participas en el congreso</p>
+    </div>
+    <div class="roles-min">
+      <a class="card rol" href="mi-entrada.html">
+        <span class="rol__ico"><i data-lucide="ticket"></i></span>
+        <h2>Asistente</h2>
+        <p>Genera tu entrada con código QR, guarda tu agenda y descarga tu certificado de asistencia.</p>
+        <span class="link">Mi entrada <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="card rol" href="expositor.html">
+        <span class="rol__ico"><i data-lucide="mic"></i></span>
+        <h2>Expositor</h2>
+        <p>Entra con tu código de acceso: tus actividades, semáforo de tiempo y certificado de ponente.</p>
+        <span class="link">Panel del expositor <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="card rol" href="organizador.html">
+        <span class="rol__ico"><i data-lucide="layout-dashboard"></i></span>
+        <h2>Organizador</h2>
+        <p>Gestiona actividades y expositores, registra ingresos y revisa la analítica del evento.</p>
+        <span class="link">Panel del organizador <i data-lucide="arrow-right"></i></span>
+      </a>
+    </div>
+  </main>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>iconos();</script>
+</body>
+</html>

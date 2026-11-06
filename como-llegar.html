@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cómo llegar · XI CSIU</title>
+  <meta name="description" content="Plano del campus PUCE Ambato y ruta paso a paso hasta cada lugar del XI Congreso CSIU.">
+  <meta name="theme-color" content="#0b3a29">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/ruta.css">
+</head>
+<body data-pagina="llegar">
+  <main id="main" class="wrap">
+    <div class="page-head">
+      <h1>Cómo llegar</h1>
+      <p>Elige un lugar y sigue la ruta dentro del campus PUCE Ambato.</p>
+    </div>
+    <div class="lugares" id="lugares" role="tablist" aria-label="Lugares del congreso"></div>
+    <section class="card ruta-pagina" id="ruta" aria-live="polite"></section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/ruta.js"></script>
+  <script>
+    (function () {
+      const pedido = new URLSearchParams(location.search).get('sala');
+      let actual = salaDe(pedido) ? pedido : CONGRESO.salas[0].id;
+      function pintar() {
+        $('#lugares').innerHTML = CONGRESO.salas.map((s) => {
+          const n = CONGRESO.charlas.filter((c) => c.sala === s.id).length;
+          const det = [s.piso || (s.nivel === 0 ? 'Planta baja' : ''), `${n} ${n === 1 ? 'actividad' : 'actividades'}`].filter(Boolean).join(' · ');
+          return `<button type="button" role="tab" class="lugar" data-sala="${s.id}" aria-selected="${s.id === actual}">
+            <strong>${escapar(s.nombre)}</strong><small>${escapar(det)}</small></button>`;
+        }).join('');
+        Ruta.montar($('#ruta'), actual, { alElegir: elegir });
+      }
+      function elegir(id) {
+        if (id === actual) return;
+        actual = id;
+        const u = new URL(location); u.searchParams.set('sala', actual); history.replaceState(null, '', u);
+        pintar();
+      }
+      $('#lugares').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-sala]');
+        if (b) elegir(b.dataset.sala);
+      });
+      pintar();
+    })();
+  </script>
+</body>
+</html>

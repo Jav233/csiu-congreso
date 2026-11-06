@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>XI CSIU · Congreso Internacional</title>
+  <meta name="description" content="XI Congreso Internacional Ciencia, Sociedad e Investigación Universitaria — Sociedades en transformación. PUCE Ambato.">
+  <meta name="theme-color" content="#021a13">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,800;0,900;1,800;1,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/portada.css">
+</head>
+<body data-pagina="inicio" data-layout="propio">
+
+  <!-- Fondo animado -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg__glow"></div>
+    <div class="bg__rays"></div>
+    <div class="bg__shard bg__shard--l"></div>
+    <div class="bg__shard bg__shard--r"></div>
+    <canvas id="particles"></canvas>
+  </div>
+
+  <a class="skip" href="#explora">Saltar al contenido</a>
+
+  <!-- Barra superior -->
+  <header class="topbar">
+    <a class="uni" href="index.html" aria-label="PUCE Ambato, inicio">
+      <span class="uni__aniv"><small>Aniversario</small><strong>40</strong></span>
+      <span class="uni__name"><strong>PUCE</strong><small>Pontificia Universidad<br>Católica del Ecuador</small></span>
+      <span class="uni__sep"></span>
+      <span class="uni__city">Ambato</span>
+    </a>
+    <nav class="topnav" aria-label="Principal">
+      <a href="agenda.html">Agenda</a>
+      <a href="expositores.html">Expositores</a>
+      <a href="como-llegar.html">Cómo llegar</a>
+    </nav>
+    <a class="btn btn--glass btn--sm" href="#ingresar"><i data-lucide="log-in"></i>Ingresar</a>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__copy reveal">
+        <p class="eyebrow"><span class="pulse"></span>Décimo primer congreso internacional</p>
+        <h1 class="hero__title">Sociedades en <span class="grad">transformación</span></h1>
+        <p class="hero__lead">Ciencia, Sociedad e Investigación Universitaria. Tres días de conferencias, ponencias y talleres con expositores nacionales e internacionales.</p>
+
+        <ul class="facts">
+          <li><i data-lucide="calendar-days"></i><span><strong id="fechaTexto">17 – 19 nov 2026</strong><small>3 días</small></span></li>
+          <li><i data-lucide="map-pin"></i><span><strong>Campus PUCE Ambato</strong><small>Ecuador</small></span></li>
+          <li><i data-lucide="building-2"></i><span><strong>Salón de los Volcanes</strong><small>9.º piso · conferencias</small></span></li>
+        </ul>
+
+        <div class="countdown" id="countdown" aria-live="polite">
+          <div class="cd"><span class="cd__n" data-u="d">00</span><span class="cd__l">días</span></div>
+          <div class="cd"><span class="cd__n" data-u="h">00</span><span class="cd__l">horas</span></div>
+          <div class="cd"><span class="cd__n" data-u="m">00</span><span class="cd__l">min</span></div>
+          <div class="cd"><span class="cd__n" data-u="s">00</span><span class="cd__l">seg</span></div>
+        </div>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="agenda.html"><i data-lucide="calendar-range"></i>Ver agenda</a>
+          <a class="btn btn--glass" href="#ingresar"><i data-lucide="sparkles"></i>Entrar al congreso</a>
+        </div>
+      </div>
+
+      <!-- Emblema XI 3D con órbita de áreas temáticas -->
+      <div class="hero__emblem reveal" style="--delay:.15s">
+        <div class="emblem" id="emblem">
+          <div class="orbit" aria-hidden="true">
+            <div class="orbit__track"></div>
+            <div class="orbit__spin">
+              <div class="orbit__slot" style="--i:0"><div class="orbit__fix"><span class="orbit__icon"><i data-lucide="chart-line"></i></span></div></div>
+              <div class="orbit__slot" style="--i:1"><div class="orbit__fix"><span class="orbit__icon"><i data-lucide="hard-hat"></i></span></div></div>
+              <div class="orbit__slot" style="--i:2"><div class="orbit__fix"><span class="orbit__icon"><i data-lucide="scale"></i></span></div></div>
+              <div class="orbit__slot" style="--i:3"><div class="orbit__fix"><span class="orbit__icon"><i data-lucide="brain"></i></span></div></div>
+              <div class="orbit__slot" style="--i:4"><div class="orbit__fix"><span class="orbit__icon"><i data-lucide="stethoscope"></i></span></div></div>
+              <div class="orbit__slot" style="--i:5"><div class="orbit__fix"><span class="orbit__icon"><i data-lucide="globe"></i></span></div></div>
+            </div>
+          </div>
+          <div class="xi" aria-hidden="true">
+            <span class="xi__back">XI</span>
+            <span class="xi__front">XI</span>
+          </div>
+          <div class="plate">
+            <span class="plate__csiu">CSIU</span>
+            <span class="plate__tag">Ciencia, Sociedad e Investigación Universitaria</span>
+          </div>
+        </div>
+      </div>
+
+      <a class="scroll-hint" href="#explora" aria-label="Bajar"><i data-lucide="chevron-down"></i></a>
+    </section>
+
+    <!-- EXPLORA -->
+    <section class="section" id="explora">
+      <header class="section__head reveal">
+        <p class="kicker">Todo en un solo lugar</p>
+        <h2>Explora el congreso</h2>
+      </header>
+      <div class="grid-explore">
+        <a class="tile tile--big reveal" href="agenda.html">
+          <i data-lucide="calendar-range"></i>
+          <h3>Agenda</h3>
+          <p>Conferencias, ponencias y talleres por día. Filtra y arma tu propio horario.</p>
+          <span class="tile__go"><i data-lucide="arrow-up-right"></i></span>
+        </a>
+        <a class="tile reveal" href="expositores.html">
+          <i data-lucide="presentation"></i>
+          <h3>Expositores</h3>
+          <p>Quiénes son, de dónde vienen y qué presentan.</p>
+          <span class="tile__go"><i data-lucide="arrow-up-right"></i></span>
+        </a>
+        <a class="tile reveal" href="agenda.html?mias=1">
+          <i data-lucide="star"></i>
+          <h3>Mi agenda</h3>
+          <p>Las actividades que guardaste, listas para tu calendario.</p>
+          <span class="tile__go"><i data-lucide="arrow-up-right"></i></span>
+        </a>
+        <a class="tile reveal" href="como-llegar.html">
+          <i data-lucide="navigation"></i>
+          <h3>Cómo llegar</h3>
+          <p>Plano del campus y ruta paso a paso hasta tu sala.</p>
+          <span class="tile__go"><i data-lucide="arrow-up-right"></i></span>
+        </a>
+        <a class="tile reveal" href="asistente.html" data-bot>
+          <i data-lucide="bot"></i>
+          <h3>Asistente virtual</h3>
+          <p>Pregunta “¿qué hay a las 10?” y te responde.</p>
+          <span class="tile__go"><i data-lucide="arrow-up-right"></i></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CALENDARIO -->
+    <section class="section section--split">
+      <div class="reveal">
+        <p class="kicker">Calendario</p>
+        <h2>Marca la fecha</h2>
+        <p class="muted">Toca un día del congreso para ver su programa.</p>
+        <ol class="days" id="daysList"></ol>
+      </div>
+      <div class="cal glass reveal" style="--delay:.1s">
+        <div class="cal__head">
+          <strong id="calTitle">Noviembre 2026</strong>
+          <span class="cal__legend"><span class="dot dot--event"></span>Congreso <span class="dot dot--today"></span>Hoy</span>
+        </div>
+        <div class="cal__grid" id="calGrid"></div>
+      </div>
+    </section>
+
+    <!-- TEMAS -->
+    <section class="section">
+      <header class="section__head reveal">
+        <p class="kicker">Lo que vas a aprender</p>
+        <h2>Temas del congreso</h2>
+      </header>
+      <div class="areas" id="areasInicio"></div>
+    </section>
+
+    <!-- INGRESAR -->
+    <section class="section" id="ingresar">
+      <header class="section__head reveal">
+        <p class="kicker">Ingresar</p>
+        <h2>¿Cómo participas?</h2>
+      </header>
+      <div class="roles">
+        <a class="role reveal" href="mi-entrada.html">
+          <span class="role__ico"><i data-lucide="ticket"></i></span>
+          <h3>Soy asistente</h3>
+          <p>Tu entrada QR, tu agenda personal y tu certificado.</p>
+          <span class="role__cta">Mi entrada <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="role role--featured reveal" href="expositor.html">
+          <span class="role__badge">Expositores</span>
+          <span class="role__ico"><i data-lucide="mic"></i></span>
+          <h3>Soy expositor</h3>
+          <p>Tus charlas, semáforo de tiempo y certificado de ponente.</p>
+          <span class="role__cta">Entrar con mi código <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="role reveal" href="organizador.html">
+          <span class="role__ico"><i data-lucide="layout-dashboard"></i></span>
+          <h3>Organizador</h3>
+          <p>Gestión del evento, check-in con QR y analítica.</p>
+          <span class="role__cta">Panel <i data-lucide="arrow-right"></i></span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer__label">Organizan y respaldan</p>
+    <ul class="partners">
+      <li>AUSJAL</li><li>ODUCAL</li><li>FIUC</li><li>UDUALC</li>
+    </ul>
+    <p class="footer__powered">Plataforma de gestión de congresos por <strong>NombreEmpresa</strong></p>
+  </footer>
+
+  <!-- Barra inferior tipo app (solo celular): mismas secciones que el resto del sitio -->
+  <nav class="tabbar" aria-label="Secciones">
+    <a href="index.html" class="is-active" aria-current="page"><i data-lucide="house"></i><span>Inicio</span></a>
+    <a href="agenda.html"><i data-lucide="calendar-days"></i><span>Agenda</span></a>
+    <a href="agenda.html?mias=1"><i data-lucide="star"></i><span>Mi agenda</span></a>
+    <a href="expositores.html"><i data-lucide="users"></i><span>Expositores</span></a>
+    <a href="como-llegar.html"><i data-lucide="navigation"></i><span>Llegar</span></a>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/inicio.js"></script>
+</body>
+</html>

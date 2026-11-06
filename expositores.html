@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Expositores · XI CSIU</title>
+  <meta name="description" content="Expositores del XI Congreso Internacional CSIU: quiénes son, de qué institución vienen, qué presentan y dónde.">
+  <meta name="theme-color" content="#0b3a29">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/ruta.css">
+  <link rel="stylesheet" href="css/expositores.css">
+</head>
+<body data-pagina="expositores">
+  <main id="main" class="wrap">
+    <div class="page-head">
+      <h1>Expositores</h1>
+      <p id="cifras"></p>
+    </div>
+
+    <div class="filtros-xp">
+      <label class="campo">
+        <i data-lucide="search"></i><span class="sr-only">Buscar</span>
+        <input id="q" type="search" placeholder="Buscar nombre, institución o tema" autocomplete="off">
+      </label>
+      <div class="segmento" role="group" aria-label="Origen" id="fOrigen">
+        <button type="button" data-origen="" aria-pressed="true">Todos</button>
+        <button type="button" data-origen="invitados" aria-pressed="false">Invitados</button>
+        <button type="button" data-origen="pucesa" aria-pressed="false">PUCESA</button>
+      </div>
+    </div>
+
+    <section class="xps" id="xps" aria-live="polite"></section>
+    <div id="vacio" class="vacio" hidden><i data-lucide="search-x"></i><p>No hay expositores con esa búsqueda.</p></div>
+    <section class="grupos" id="grupos"></section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/ruta.js"></script>
+  <script src="js/expositores.js"></script>
+</body>
+</html>

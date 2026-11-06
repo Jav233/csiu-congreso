@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panel del organizador · XI CSIU</title>
+  <meta name="description" content="Gestión del XI Congreso CSIU: actividades, expositores, check-in y analítica.">
+  <meta name="theme-color" content="#0b3a29">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/paneles.css">
+</head>
+<body data-pagina="organizador">
+  <main id="main" class="wrap">
+    <div class="page-head panel-head">
+      <div>
+        <h1>Panel del organizador</h1>
+        <p id="sub">Gestión del congreso, check-in y analítica</p>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="btnSalir" type="button" hidden><i data-lucide="log-out"></i>Cerrar sesión</button>
+    </div>
+
+    <!-- Ingreso -->
+    <section class="acceso card" id="acceso" hidden>
+      <h2>Ingresa como organizador</h2>
+      <form class="form" id="formAcceso" novalidate>
+        <label>Código de organizador
+          <input id="codigoOrg" type="text" autocomplete="off" autocapitalize="characters" placeholder="ORG-0000" required>
+        </label>
+        <p class="error" id="errAcceso" role="alert" hidden></p>
+        <button class="btn btn--primary" type="submit">Entrar</button>
+        <button class="btn btn--secondary" type="button" id="btnPruebaOrg">Usar la cuenta de prueba</button>
+      </form>
+      <p class="aviso-demo"><i data-lucide="info"></i><span>Prototipo: la cuenta de prueba usa el código <strong>ORG-2026</strong>. Los cambios se guardan solo en este navegador.</span></p>
+    </section>
+
+    <!-- Panel -->
+    <div id="panel" hidden>
+      <div class="segmento tabs" role="tablist" aria-label="Secciones del panel">
+        <button type="button" role="tab" data-tab="resumen" aria-selected="true"><i data-lucide="chart-column"></i>Resumen</button>
+        <button type="button" role="tab" data-tab="actividades" aria-selected="false"><i data-lucide="calendar-days"></i>Actividades</button>
+        <button type="button" role="tab" data-tab="expositores" aria-selected="false"><i data-lucide="users"></i>Expositores</button>
+        <button type="button" role="tab" data-tab="checkin" aria-selected="false"><i data-lucide="scan-line"></i>Check-in</button>
+      </div>
+
+      <section data-panel="resumen" aria-label="Resumen y analítica"></section>
+      <section data-panel="actividades" hidden aria-label="Actividades"></section>
+      <section data-panel="expositores" hidden aria-label="Expositores"></section>
+      <section data-panel="checkin" hidden aria-label="Check-in"></section>
+    </div>
+  </main>
+
+  <dialog class="hoja" id="editor" aria-labelledby="edTitulo"><div class="hoja__scroll" id="editorCuerpo"></div></dialog>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/organizador.js"></script>
+</body>
+</html>
