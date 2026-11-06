@@ -1,4 +1,10 @@
+<p align="center"><img src="img/logo-neuralia.jpg" alt="Neuralia — La inteligencia detrás de cada congreso" width="560"></p>
+
 # XI CSIU · Plataforma del congreso (prototipo)
+
+**Neuralia** — *«La inteligencia detrás de cada congreso»*. Plataforma SaaS para la gestión de congresos institucionales.
+
+**Sitio publicado:** https://jav233.github.io/csiu-congreso/
 
 Prototipo web y móvil de una plataforma SaaS para la gestión de congresos institucionales,
 aplicado al **XI Congreso Internacional Ciencia, Sociedad e Investigación Universitaria**

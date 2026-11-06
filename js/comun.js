@@ -121,6 +121,18 @@ function montarLayout() {
     </header>`);
   Tema.aplicar(Tema.actual());
   document.body.insertAdjacentHTML('beforeend', `
+    <footer class="pie wrap">
+      <div class="pie__fila">
+        <p class="pie__ev"><strong>XI CSIU</strong> · PUCE Ambato · 17–19 nov 2026</p>
+        <div class="pie__neuralia">
+          <span class="pie__n-logo"><img src="img/logo-neuralia-icono.jpg" alt="Logo Neuralia" loading="lazy" decoding="async"></span>
+          <div class="pie__n-txt">
+            <span class="pie__n-linea">Plataforma por <strong class="pie__n-marca">NEURAL<span>IA</span></strong></span>
+            <small class="pie__n-eslogan">«La inteligencia detrás de cada congreso»</small>
+          </div>
+        </div>
+      </div>
+    </footer>
     <nav class="tabbar" aria-label="Secciones">
       ${SECCIONES.map((s) => `<a href="${s.href}" data-sec="${s.id}"><i data-lucide="${s.icono}"></i><span>${s.corto || s.txt}</span></a>`).join('')}
     </nav>
