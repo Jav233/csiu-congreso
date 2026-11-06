@@ -48,8 +48,18 @@ const Bot = (() => {
       <i data-lucide="chevron-right"></i></a></li>`;
   }
 
+  // Persona encontrada: lleva a su perfil en la página de Expositores
+  function filaPersona(x) {
+    const n = new Set(CONGRESO.charlas.filter((c) => c.exp.includes(x.id)).map((c) => c.titulo)).size;
+    return `<li><a class="bot__item bot__item--persona" href="expositores.html#exp-${x.id}">
+      <span class="bot__avatar-p" aria-hidden="true">${iniciales(x.nombre)}</span>
+      <span class="bot__info"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.institucion)} · ${n} ${n === 1 ? 'actividad' : 'actividades'}</small></span>
+      <i data-lucide="chevron-right"></i></a></li>`;
+  }
+
   function htmlRespuesta(r) {
     let h = `<p>${escapar(r.txt.replace(/:\s*$/, '.')).replace(/\n/g, '<br>')}</p>`;
+    if (r.personas?.length) h += `<ul class="bot__items">${r.personas.map(filaPersona).join('')}</ul>`;
     const cs = r.cards || [];
     if (cs.length) {
       h += `<ul class="bot__items">${cs.slice(0, MAX).map(fila).join('')}</ul>`;

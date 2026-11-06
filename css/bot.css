@@ -163,3 +163,7 @@
 /* Texto solo para lectores de pantalla (también en la portada) */
 .bot .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .bot svg.robot { width: auto; }
+/* Personas encontradas */
+.bot__item--persona { border-left-color: var(--b-marca); }
+.bot__avatar-p { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-weight: 700; font-size: .8rem;
+  color: var(--b-marca); background: var(--b-suave); }

@@ -46,7 +46,9 @@ const BotCerebro = (() => {
     for (const x of CONGRESO.expositores) {
       const nom = tokens(normal(x.nombre));
       const p = nom.filter((w) => tk.includes(w)).length;
-      if (p > punt) { punt = p; mejor = x; }
+      // Los grupos («Docentes investigadores de la PUCESA») piden al menos 2 palabras,
+      // para que «pucesa» sola busque personas de esa institución
+      if (p >= (x.grupo ? 2 : 1) && p > punt) { punt = p; mejor = x; }
     }
     return punt ? mejor : null;
   }
@@ -86,6 +88,54 @@ const BotCerebro = (() => {
   const enCurso = (c, t) => instante(c, c.ini) <= t && t < instante(c, c.fin);
   const lista = (cs) => ({ cards: cs });
 
+  // ---------- Búsqueda con índice (nombre > exposición > institución) ----------
+  const PEDIR_BUSCAR = /\b(busca|buscar|buscame|buscarme|buscas|buscarlo|buscarla|encuentra|encontrar|encuentrame|localiza|localizar)\b/;
+  const QUIEN_DA = /\bquien(es)?\s+(da|dan|dicta|dictan|presenta|presentan|expone|exponen|imparte|hace|hacen|tiene)\b/;
+  const RELLENO = new Set('busca buscar buscame buscarme buscas buscarlo buscarla encuentra encontrar encuentrame localiza localizar puedes podrias podria favor porfa ayuda ayudas ayudame quiero necesito expositor expositora expositores ponente ponentes persona personas charla charlas exposicion exposiciones conferencia taller talleres actividad actividades sobre llamado llamada nombre tema institucion universidad quien quienes dicta dictan presenta presentan expone exponen imparte hace hacen tiene alguien algun alguna alguno algo cosa cosas info informacion'.split(' '));
+  let _indice = null;
+  function indicePersonas() {
+    if (_indice) return _indice;
+    _indice = CONGRESO.expositores.filter((x) => !x.grupo).map((x) => {
+      const acts = [...new Set(CONGRESO.charlas.filter((c) => c.exp.includes(x.id)).map((c) => c.titulo))];
+      const campo = (texto, peso) => ({ peso, palabras: normal(texto).split(/[^a-z0-9]+/).filter(Boolean) });
+      return { x, campos: [campo(x.nombre.replace(TITULOS, ' '), 5), ...acts.map((a) => campo(a, 3)), campo(x.institucion, 2)] };
+    });
+    return _indice;
+  }
+  function puntuar(campos, tk) {
+    let total = 0, todos = true;
+    for (const w of tk) {
+      let mejor = 0;
+      for (const c of campos) {
+        const p = c.palabras.some((p) => p.startsWith(w)) ? c.peso * 2 : c.palabras.some((p) => p.includes(w)) ? c.peso : 0;
+        if (p > mejor) mejor = p;
+      }
+      if (!mejor) todos = false;
+      total += mejor;
+    }
+    return { total, todos };
+  }
+  function buscarTodo(t) {
+    const tk = tokens(t).filter((w) => !RELLENO.has(w));
+    if (!tk.length) return { tk, personas: [], charlas: [] };
+    const elegir = (lista) => {
+      const exactos = lista.filter((r) => r.todos);
+      return (exactos.length ? exactos : lista.filter((r) => r.total > 0)).sort((a, b) => b.total - a.total);
+    };
+    const personas = elegir(indicePersonas().map((i) => ({ x: i.x, ...puntuar(i.campos, tk) })));
+    const charlas = elegir(reales().map((c) => {
+      const campos = [{ peso: 4, palabras: normal(c.titulo).split(/[^a-z0-9]+/) }, { peso: 1, palabras: normal(areaDe(c.area).nombre).split(/[^a-z0-9]+/) }];
+      return { c, ...puntuar(campos, tk) };
+    }));
+    // Si hay coincidencias completas, descartar las parciales más débiles
+    const corte = (arr) => arr.filter((r) => r.total >= arr[0]?.total * 0.6);
+    return { tk, personas: corte(personas).map((r) => r.x), charlas: corte(charlas).map((r) => r.c) };
+  }
+  const actividadesDe = (x) => {
+    const cs = reales().filter((c) => c.exp.includes(x.id));
+    return cs.filter((c, i) => cs.findIndex((o) => o.titulo === c.titulo) === i);
+  };
+
   function responder(texto) {
     const t = ` ${normal(texto).replace(/[¿?¡!.,;]/g, ' ').replace(/\s+/g, ' ')} `;
     const dia = detectarDia(t);
@@ -94,8 +144,30 @@ const BotCerebro = (() => {
     if (/^\s*(hola|buenas|buenos|hey|saludos|que tal)\b/.test(t) && t.trim().split(' ').length <= 4)
       return { txt: '¡Hola! Soy el asistente del XI CSIU. Puedo decirte qué hay a cierta hora, dónde es una actividad o quién es un expositor.', sug: true };
     if (/\b(gracias|genial|perfecto|excelente)\b/.test(t)) return { txt: '¡Con gusto! Si necesitas algo más, aquí estoy.' };
+    // Búsqueda explícita: «busca a Heredia», «¿puedes buscar la charla de Power BI?», «¿quién da propiedad intelectual?»
+    const pideBuscar = PEDIR_BUSCAR.test(t);
+    const quienDa = QUIEN_DA.test(t);
+    if (pideBuscar || quienDa) {
+      const r = buscarTodo(t);
+      if (!r.tk.length)
+        return { txt: '¡Claro que puedo buscar! Encuentro expositores por su nombre, su institución o el tema de su exposición, y también actividades. Dime qué buscas, por ejemplo: «busca a Heredia», «busca la charla de Power BI» o «¿quién da propiedad intelectual?».' };
+      if (quienDa && r.charlas.length) {
+        const c = r.charlas[0];
+        const ps = c.exp.map(expositorDe);
+        return { txt: `«${c.titulo}» la presenta ${ps.map((p) => `${p.nombre} (${p.institucion})`).join(' y ')}.`, personas: ps.filter((p) => !p.grupo), ...lista([c]) };
+      }
+      if (r.personas.length === 1) {
+        const x = r.personas[0];
+        return { txt: `Encontré a ${x.nombre}, de ${x.institucion}. Estas son sus actividades:`, personas: [x], ...lista(actividadesDe(x)) };
+      }
+      if (r.personas.length > 1)
+        return { txt: `Encontré ${r.personas.length} expositores con «${r.tk.join(' ')}». Toca uno para ver su perfil:`, personas: r.personas.slice(0, 5) };
+      if (r.charlas.length) return { txt: r.charlas.length === 1 ? 'Encontré esta actividad:' : 'Encontré estas actividades:', ...lista(r.charlas) };
+      return { txt: `No encontré nada con «${r.tk.join(' ')}». Prueba con un apellido, una institución o una palabra del tema de la exposición.` };
+    }
+
     if (/\b(ayuda|que puedes|que sabes|como funcionas)\b/.test(t))
-      return { txt: 'Puedes preguntarme, por ejemplo: «¿Qué hay a las 10 el miércoles?», «¿Dónde es el taller de Power BI?», «¿Quién es Isabel Heredia?» o «¿Qué talleres hay?».', sug: true };
+      return { txt: 'Puedes preguntarme, por ejemplo: «¿Qué hay a las 10 el miércoles?», «¿Dónde es el taller de Power BI?», «¿Quién es Isabel Heredia?», «Busca expositores de la PUCESA» o «¿Qué talleres hay?».', sug: true };
 
     if (dia === 'hoy-no' || dia === 'manana-no')
       return { txt: `Ese día no hay actividades del congreso. El congreso es del ${fechaDia(1).getDate()} al ${fechaDia(ev.dias.length).getDate()} de noviembre de 2026.`, sug: true };
@@ -188,6 +260,10 @@ const BotCerebro = (() => {
       return { txt: `El ${ev.nombre} es del ${fechaDia(1).getDate()} al ${fechaDia(ev.dias.length).getDate()} de noviembre de 2026, de 09:00 a 17:30, en el ${ev.lugar}.` };
     if (quiereLugar)
       return { txt: `El congreso es en el ${ev.lugar}. Las conferencias son en el Salón de los Volcanes (9.º piso) y los talleres en el Salón Tres Juanes / Lab Cisco y el Laboratorio 107.`, links: [['como-llegar.html', 'Ver el plano y la ruta']] };
+    // Buscar en el índice de expositores (p. ej. solo una institución: «onu», «pucesa»)
+    const r = buscarTodo(t);
+    if (r.personas.length === 1) return { txt: `Encontré a ${r.personas[0].nombre}, de ${r.personas[0].institucion}:`, personas: r.personas, ...lista(actividadesDe(r.personas[0])) };
+    if (r.personas.length > 1) return { txt: `Encontré ${r.personas.length} expositores relacionados:`, personas: r.personas.slice(0, 5) };
     if (encontradas.length) return { txt: 'Esto es lo más parecido que encontré:', ...lista(encontradas.slice(0, 5)) };
 
     return { txt: 'No encontré eso en la agenda. Prueba con una hora («a las 11»), un día («el jueves»), un expositor o un tema. Para otras consultas acércate al punto de información del congreso.', sug: true };
