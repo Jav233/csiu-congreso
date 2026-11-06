@@ -123,10 +123,15 @@
 }
 
 /* Ingresar */
-.roles-min { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.rol { display: flex; flex-direction: column; gap: 8px; padding: 20px; transition: border-color .15s; }
-.rol:hover { border-color: var(--brand); }
-.rol__ico { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-text); }
+.roles-min { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.rol { display: flex; flex-direction: column; gap: 8px; padding: 0 20px 20px; overflow: hidden; transition: border-color .15s, transform .2s; }
+.rol:hover { border-color: var(--brand); transform: translateY(-3px); }
+.rol__img { position: relative; margin: 0 -20px; aspect-ratio: 20 / 7.5; overflow: hidden; background: #032a1d; }
+.rol__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.rol__img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(3, 24, 16, .65) 100%); pointer-events: none; }
+.rol:hover .rol__img img { transform: scale(1.06); }
+.rol__ico { position: relative; z-index: 1; display: grid; place-items: center; width: 48px; height: 48px; margin-top: -28px; border-radius: 12px;
+  background: var(--brand-soft); color: var(--brand-text); border: 2px solid var(--surface); box-shadow: 0 4px 12px rgba(0, 0, 0, .14); }
 .rol h2 { font-size: 1.1rem; font-weight: 800; }
 .rol p { color: var(--muted); font-size: .93rem; line-height: 1.5; flex: 1; }
 .rol .link { min-height: 32px; }

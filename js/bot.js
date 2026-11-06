@@ -40,7 +40,9 @@ const Bot = (() => {
   // ---------- Piezas de respuesta ----------
   function fila(c) {
     const sala = salaDe(c.sala), ar = areaDe(c.area);
+    const img = typeof Portadas !== 'undefined' ? Portadas.url(c) : `img/portadas/${c.area || 'general'}.jpg`;
     return `<li><a class="bot__item" href="agenda.html?dia=${c.dia}&charla=${c.id}" style="--c:${ar.color}">
+      <span class="bot__thumb" aria-hidden="true"><img src="${img}" alt="" loading="lazy" decoding="async"></span>
       <span class="bot__hora"><b>${c.ini}</b><small>${diaCorto(c.dia).split(' ')[0]}</small></span>
       <span class="bot__info"><strong>${escapar(c.titulo)}</strong><small>${escapar(sala.nombre)}</small></span>
       <i data-lucide="chevron-right"></i></a></li>`;

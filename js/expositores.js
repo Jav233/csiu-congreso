@@ -23,6 +23,7 @@ function tarjeta(x) {
   const acts = actividadesDe(x.id);
   const color = areaDe(acts[0]?.area).color;
   return `<article class="xp card" id="exp-${x.id}" tabindex="-1" style="--c:${color}">
+    <div class="xp__portada">${Portadas.svg(acts[0])}</div>
     <header class="xp__cab">
       <span class="avatar xp__avatar" aria-hidden="true">${iniciales(x.nombre)}</span>
       <div class="xp__id">
@@ -34,9 +35,12 @@ function tarjeta(x) {
     <ul class="xp__acts">${acts.map((a) => {
       const ar = areaDe(a.area), sala = salaDe(a.sala);
       return `<li class="xp__act">
-        <p class="xp__cuando"><span>${diaCorto(a.dia)} · ${horario(a)}</span><span>·</span><span>${tipoDe(a.tipo).nombre}</span><span class="tema" style="--c:${ar.color}"><i data-lucide="${ar.icono}"></i>${ar.nombre}</span></p>
-        <a class="xp__tit" href="agenda.html?dia=${a.dia}&charla=${a.id}">${escapar(a.titulo)}</a>
-        <button type="button" class="link xp__lugar" data-ruta="${sala.id}"><i data-lucide="map-pin"></i>${escapar(textoLugar(sala))}</button>
+        <a class="xp__thumb" href="agenda.html?dia=${a.dia}&charla=${a.id}" tabindex="-1" aria-hidden="true">${Portadas.svg(a)}</a>
+        <div class="xp__act-info">
+          <p class="xp__cuando"><span>${diaCorto(a.dia)} · ${horario(a)}</span><span>·</span><span>${tipoDe(a.tipo).nombre}</span><span class="tema" style="--c:${ar.color}"><i data-lucide="${ar.icono}"></i>${ar.nombre}</span></p>
+          <a class="xp__tit" href="agenda.html?dia=${a.dia}&charla=${a.id}">${escapar(a.titulo)}</a>
+          <button type="button" class="link xp__lugar" data-ruta="${sala.id}"><i data-lucide="map-pin"></i>${escapar(textoLugar(sala))}</button>
+        </div>
       </li>`;
     }).join('')}</ul>
   </article>`;
@@ -60,7 +64,7 @@ function render() {
   const grupos = CONGRESO.expositores.filter((x) => x.grupo && coincide(x));
   $('#grupos').innerHTML = grupos.length ? `<h2>También participan</h2><ul class="filas-xp card">${grupos.map((x) => {
     const acts = actividadesDe(x.id);
-    return `<li><span class="avatar" aria-hidden="true"><i data-lucide="users"></i></span>
+    return `<li><span class="filas-xp__thumb" aria-hidden="true">${Portadas.svg(acts[0])}</span>
       <span><strong>${escapar(x.nombre)}</strong><small>${acts.map((a) => `${escapar(a.titulo)} · ${diaCorto(a.dia)}, ${a.ini}`).join('<br>')}</small></span></li>`;
   }).join('')}</ul>` : '';
   iconos();
