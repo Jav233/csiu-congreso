@@ -240,20 +240,22 @@ html { overflow-x: clip; }
 .cal__d--event:hover { transform: scale(1.08); }
 .cal__d--event small { position: absolute; bottom: 3px; font-size: .5rem; font-weight: 800; text-transform: uppercase; }
 
-/* Temas */
-.areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 14px; }
+/* Temas: grilla simétrica de 12 columnas (4 arriba + 3 abajo alineadas de borde a borde) */
+.areas { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
 a.area { color: inherit; }
-.area small { font-size: .75rem; color: var(--muted); padding: 0 12px; }
-.area { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 0 18px; text-align: center; border-radius: var(--radius);
+.area { grid-column: span 3; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 0 20px; text-align: center; border-radius: var(--radius);
   background: var(--glass); border: 1px solid var(--line); overflow: hidden; transition: .25s; }
-.area__img { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #021d14; }
+/* Las 3 tarjetas de la segunda fila ocupan 4 columnas cada una (3 × 4 = 12) para cerrar el bloque con simetría exacta */
+.area:nth-child(n+5) { grid-column: span 4; }
+.area small { font-size: .78rem; color: var(--muted); padding: 0 14px; margin-top: auto; }
+.area__img { position: relative; width: 100%; height: 128px; overflow: hidden; background: #021d14; }
 .area__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
 .area__img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(1, 20, 14, .75) 100%); }
-.area__ico { position: relative; z-index: 1; display: grid; place-items: center; width: 46px; height: 46px; margin-top: -28px; border-radius: 50%;
+.area__ico { position: relative; z-index: 1; display: grid; place-items: center; width: 48px; height: 48px; margin-top: -28px; border-radius: 50%;
   color: color-mix(in srgb, var(--c) 55%, #fff); background: #03261a; border: 1.5px solid color-mix(in srgb, var(--c) 55%, transparent);
   box-shadow: 0 6px 18px rgba(0, 0, 0, .45); }
 .area__ico svg { width: 22px; height: 22px; }
-.area h3 { font-size: .88rem; font-weight: 700; line-height: 1.3; padding: 0 10px; }
+.area h3 { font-size: .95rem; font-weight: 700; line-height: 1.3; padding: 2px 14px 0; }
 .area:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--c) 55%, transparent); box-shadow: 0 12px 32px color-mix(in srgb, var(--c) 22%, transparent); }
 .area:hover .area__img img { transform: scale(1.07); }
 
@@ -390,7 +392,9 @@ a.area { color: inherit; }
   .grid-explore { grid-template-columns: 1fr 1fr; gap: 10px; }
   .tile { padding: 16px; min-height: 150px; }
   .tile p { font-size: .82rem; }
-  .areas { grid-template-columns: repeat(2, 1fr); }
+  .areas { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .area, .area:nth-child(n+5) { grid-column: span 1; }
+  .area:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: grid; grid-template-columns: repeat(5, 1fr);
     padding: 8px 6px calc(8px + env(safe-area-inset-bottom)); background: rgba(1, 20, 14, .85);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--line); }

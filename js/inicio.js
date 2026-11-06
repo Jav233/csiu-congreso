@@ -75,8 +75,9 @@ $('#daysList').innerHTML = DIAS.map((d, i) => {
 {
   const usados = {};
   for (const c of CONGRESO.charlas) if (!esReceso(c)) usados[c.area] = (usados[c.area] || 0) + 1;
-  $('#areasInicio').innerHTML = Object.entries(usados).map(([id, n]) => {
-    const a = areaDe(id);
+  const orden = Object.keys(CONGRESO.areas).filter((id) => usados[id]);
+  $('#areasInicio').innerHTML = orden.map((id) => {
+    const a = areaDe(id), n = usados[id];
     return `<a class="area reveal" href="agenda.html?area=${id}" style="--c:${a.color}">
       <span class="area__img"><img src="img/portadas/${id}.jpg" alt="" loading="lazy" decoding="async"></span>
       <span class="area__ico"><i data-lucide="${a.icono}"></i></span>
