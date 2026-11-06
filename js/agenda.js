@@ -122,6 +122,12 @@ function pintarLista(lista) {
     html += htmlSesion(c, mias);
   }
   $('#lista').innerHTML = html;
+  // Simetría: si un bloque entre recesos tiene un número impar de tarjetas,
+  // la última se centra en vez de quedar sola a la izquierda
+  let bloque = [];
+  const cerrar = () => { if (bloque.length % 2 === 1) bloque.at(-1).classList.add('is-sola'); bloque = []; };
+  for (const el of $('#lista').children) { if (el.classList.contains('tarj')) bloque.push(el); else cerrar(); }
+  cerrar();
 }
 
 function pintarGrilla(lista) {

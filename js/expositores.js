@@ -35,7 +35,7 @@ function tarjeta(x) {
     <ul class="xp__acts">${acts.map((a) => {
       const ar = areaDe(a.area), sala = salaDe(a.sala);
       return `<li class="xp__act">
-        <a class="xp__thumb" href="agenda.html?dia=${a.dia}&charla=${a.id}" tabindex="-1" aria-hidden="true">${Portadas.svg(a)}</a>
+        <span class="xp__thumb" aria-hidden="true">${Portadas.svg(a)}</span>
         <div class="xp__act-info">
           <p class="xp__cuando"><span>${diaCorto(a.dia)} · ${horario(a)}</span><span>·</span><span>${tipoDe(a.tipo).nombre}</span><span class="tema" style="--c:${ar.color}"><i data-lucide="${ar.icono}"></i>${ar.nombre}</span></p>
           <a class="xp__tit" href="agenda.html?dia=${a.dia}&charla=${a.id}">${escapar(a.titulo)}</a>

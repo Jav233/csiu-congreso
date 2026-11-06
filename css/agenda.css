@@ -99,7 +99,8 @@ a.det__expo:hover { background: var(--surface-2); }
 .receso { color: var(--brand-text); background: linear-gradient(90deg, transparent, var(--brand-soft) 30%, transparent); }
 
 /* ============ Tarjetas con portada ilustrada ============ */
-.lista { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; align-items: stretch; }
+/* Dos columnas fijas: los bloques entre recesos (casi siempre de 2) quedan simétricos */
+.lista { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
 .lista > .lista__dia, .lista > .receso { grid-column: 1 / -1; }
 .lista > .receso { margin: 0; padding: 10px 16px; border: 0; border-radius: 12px; }
 .portada { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center var(--pos-y, 50%); background: #032a1d; }
@@ -108,7 +109,9 @@ a.det__expo:hover { background: var(--surface-2); }
   border: 1px solid var(--line); box-shadow: var(--shadow); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, border-color .2s; }
 .tarj:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); box-shadow: 0 14px 34px rgba(12, 40, 28, .12); }
 .tarj:focus-within { border-color: var(--brand); }
-.tarj__img { position: relative; aspect-ratio: 20 / 9; overflow: hidden; background: #032a1d; }
+.tarj__img { position: relative; aspect-ratio: 20 / 7; overflow: hidden; background: #032a1d; }
+/* Tarjeta impar al final de un bloque: centrada, del mismo ancho que las demás */
+.tarj.is-sola { grid-column: 1 / -1; justify-self: center; width: calc((100% - 18px) / 2); }
 .tarj__img::after { content: ""; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, rgba(2, 20, 14, .38) 0%, transparent 38%, transparent 62%, rgba(2, 20, 14, .52) 100%); }
 .tarj__img .portada { transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
@@ -145,6 +148,7 @@ a.det__expo:hover { background: var(--surface-2); }
 @media (max-width: 760px) {
   .lista { grid-template-columns: 1fr; gap: 14px; }
   .tarj__img { aspect-ratio: 20 / 8; }
+  .tarj.is-sola { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .tarj:hover, .tarj:hover .tarj__img .portada { transform: none; }
