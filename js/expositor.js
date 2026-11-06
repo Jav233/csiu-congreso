@@ -17,7 +17,9 @@ function errorAcceso(msg) {
   $('#codigoExp').setAttribute('aria-invalid', 'true'); $('#codigoExp').focus();
 }
 
-function elegir(x) {
+// Elegir a la persona completa todo lo demás: su tarjeta y su código.
+// { desdeCodigo: true } cuando la persona se reconoce al escribir el código.
+function elegir(x, { desdeCodigo = false } = {}) {
   elegido = x;
   $('#elegidoAv').textContent = iniciales(x.nombre);
   $('#elegidoNom').textContent = x.nombre;
@@ -26,7 +28,10 @@ function elegir(x) {
   $('#pasoBuscar').hidden = true;
   $('#lblCodigo').firstChild.textContent = 'Tu código de acceso ';
   $('#errAcceso').hidden = true;
-  $('#codigoExp').focus();
+  $('#codigoExp').removeAttribute('aria-invalid');
+  if (!desdeCodigo) $('#codigoExp').value = x.codigo;
+  $('#estadoAcceso').textContent = `${x.nombre} — ${x.institucion}. Código completado. Pulsa Entrar.`;
+  if (!desdeCodigo) $('#btnEntrar').focus();
 }
 
 function cambiar() {
@@ -34,9 +39,24 @@ function cambiar() {
   $('#elegido').hidden = true;
   $('#pasoBuscar').hidden = false;
   $('#lblCodigo').firstChild.textContent = 'Código de acceso ';
+  $('#codigoExp').value = '';
   $('#buscaExp').value = '';
   $('#buscaExp').focus();
 }
+
+// Escribir el código también reconoce a la persona (sin tener que buscarla)
+$('#codigoExp').addEventListener('input', (e) => {
+  const x = expositorPorCodigo(e.target.value);
+  if (x && elegido?.id !== x.id) elegir(x, { desdeCodigo: true });
+  else if (!x && elegido && e.target.value.trim().length >= 8) { // código completo pero no coincide
+    elegido = null; $('#elegido').hidden = true; $('#pasoBuscar').hidden = false;
+  }
+});
+// Si escriben el código en el buscador, se reconoce igual
+$('#buscaExp').addEventListener('input', (e) => {
+  const x = expositorPorCodigo(e.target.value);
+  if (x) { $('#codigoExp').value = x.codigo; elegir(x); }
+});
 
 function entrar(cod) {
   const limpio = String(cod).trim().toUpperCase();
@@ -58,13 +78,6 @@ Autocompletar($('#buscaExp'), {
 });
 $('#btnCambiar').addEventListener('click', cambiar);
 $('#formAcceso').addEventListener('submit', (e) => { e.preventDefault(); entrar($('#codigoExp').value); });
-// Prototipo: completa el código de la persona elegida (o del expositor de prueba)
-$('#btnPruebaExp').addEventListener('click', () => {
-  if (!elegido) elegir(CONGRESO.expositores.find((x) => x.codigo === PRUEBA));
-  $('#codigoExp').value = elegido.codigo;
-  $('#codigoExp').focus();
-  avisar('Datos de prueba completados. Toca «Entrar».');
-});
 $('#btnSalir').addEventListener('click', () => { Sesion.salir('expositor'); mostrar(); avisar('Sesión cerrada'); });
 
 function faltaTexto(c) {

@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261106-0748">
-  <link rel="stylesheet" href="css/ruta.css?v=20261106-0748">
-  <link rel="stylesheet" href="css/paneles.css?v=20261106-0748">
+  <link rel="stylesheet" href="css/styles.css?v=20261106-0751">
+  <link rel="stylesheet" href="css/ruta.css?v=20261106-0751">
+  <link rel="stylesheet" href="css/paneles.css?v=20261106-0751">
 </head>
 <body data-pagina="expositor">
   <main id="main" class="wrap">
@@ -28,12 +28,12 @@
     <section class="acceso card" id="acceso" hidden>
       <h2>Ingresa a tu panel</h2>
       <form class="form" id="formAcceso" novalidate>
-        <!-- Paso 1: encontrarse (opcional) -->
+        <!-- Una sola búsqueda: nombre, exposición, institución o código -->
         <div id="pasoBuscar">
-          <label for="buscaExp">Busca tu nombre o tu exposición <small>también sirve tu institución</small></label>
+          <label for="buscaExp">Busca tu nombre, tu exposición o tu código <small>al elegirte, el resto se completa solo</small></label>
           <div class="campo campo--ac">
             <i data-lucide="search"></i>
-            <input id="buscaExp" type="text" placeholder="Ej.: Heredia, Power BI, ingeniería social…" enterkeyhint="search">
+            <input id="buscaExp" type="text" placeholder="Ej.: Heredia, Power BI o EXP-1009" enterkeyhint="search">
           </div>
         </div>
         <!-- Persona elegida -->
@@ -43,25 +43,25 @@
           <button class="btn btn--ghost btn--sm" type="button" id="btnCambiar">Cambiar</button>
         </div>
         <!-- Paso 2: el código es la llave -->
-        <label for="codigoExp" id="lblCodigo">Código de acceso <small>lo envía el comité organizador</small></label>
+        <label for="codigoExp" id="lblCodigo">Código de acceso <small>se completa al elegirte; si lo tienes, también puedes escribirlo aquí</small></label>
         <input id="codigoExp" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="EXP-0000" required aria-describedby="errAcceso">
         <p class="error" id="errAcceso" role="alert" hidden></p>
-        <button class="btn btn--primary" type="submit"><i data-lucide="log-in"></i>Entrar</button>
-        <button class="btn btn--secondary" type="button" id="btnPruebaExp">Completar con datos de prueba</button>
+        <p class="sr-only" id="estadoAcceso" aria-live="polite"></p>
+        <button class="btn btn--primary" type="submit" id="btnEntrar"><i data-lucide="log-in"></i>Entrar</button>
       </form>
-      <p class="aviso-demo"><i data-lucide="info"></i><span>¿Ya tienes tu código? Escríbelo directamente. Prototipo: los códigos de todos los expositores se ven en el panel del organizador (código <strong>ORG-2026</strong>).</span></p>
+      <p class="aviso-demo"><i data-lucide="info"></i><span>Prototipo: el código se completa al elegir tu nombre. En la versión real, el acceso llegaría a tu correo.</span></p>
     </section>
 
     <div id="panel" hidden></div>
   </main>
 
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
-  <script src="js/datos.js?v=20261106-0748"></script>
-  <script src="js/comun.js?v=20261106-0748"></script>
-  <script src="js/ruta.js?v=20261106-0748"></script>
-  <script src="js/certificado.js?v=20261106-0748"></script>
-  <script src="js/portadas.js?v=20261106-0748"></script>
-  <script src="js/autocompletar.js?v=20261106-0748"></script>
-  <script src="js/expositor.js?v=20261106-0748"></script>
+  <script src="js/datos.js?v=20261106-0751"></script>
+  <script src="js/comun.js?v=20261106-0751"></script>
+  <script src="js/ruta.js?v=20261106-0751"></script>
+  <script src="js/certificado.js?v=20261106-0751"></script>
+  <script src="js/portadas.js?v=20261106-0751"></script>
+  <script src="js/autocompletar.js?v=20261106-0751"></script>
+  <script src="js/expositor.js?v=20261106-0751"></script>
 </body>
 </html>
