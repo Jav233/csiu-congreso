@@ -92,3 +92,18 @@ if (location.hash.startsWith('#exp-')) {
   const t = $(location.hash);
   if (t) { t.classList.add('is-foco'); t.scrollIntoView({ block: 'center' }); t.focus({ preventScroll: true }); }
 }
+
+// Autocompletado: elegir una sugerencia lleva directo a la tarjeta del expositor
+Autocompletar($('#q'), {
+  elementos: () => elementosExpositores(),
+  alElegir: (item) => {
+    estado.q = ''; $('#q').value = ''; render();
+    const t = $(`#exp-${item.id}`);
+    if (!t) return;
+    $$('.xp.is-foco').forEach((x) => x.classList.remove('is-foco'));
+    t.classList.add('is-foco');
+    t.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    t.focus({ preventScroll: true });
+  },
+  vacio: 'Sin coincidencias. Prueba con un apellido, una institución o un tema.',
+});

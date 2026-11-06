@@ -9,19 +9,62 @@ function expositorPorCodigo(cod) {
   return CONGRESO.expositores.find((x) => x.codigo && x.codigo === String(cod).trim().toUpperCase());
 }
 
+// ---------- Ingreso: buscarse (opcional) + código (obligatorio) ----------
+let elegido = null; // expositor elegido en el buscador
+
+function errorAcceso(msg) {
+  const e = $('#errAcceso'); e.textContent = msg; e.hidden = false;
+  $('#codigoExp').setAttribute('aria-invalid', 'true'); $('#codigoExp').focus();
+}
+
+function elegir(x) {
+  elegido = x;
+  $('#elegidoAv').textContent = iniciales(x.nombre);
+  $('#elegidoNom').textContent = x.nombre;
+  $('#elegidoInst').textContent = x.institucion;
+  $('#elegido').hidden = false;
+  $('#pasoBuscar').hidden = true;
+  $('#lblCodigo').firstChild.textContent = 'Tu código de acceso ';
+  $('#errAcceso').hidden = true;
+  $('#codigoExp').focus();
+}
+
+function cambiar() {
+  elegido = null;
+  $('#elegido').hidden = true;
+  $('#pasoBuscar').hidden = false;
+  $('#lblCodigo').firstChild.textContent = 'Código de acceso ';
+  $('#buscaExp').value = '';
+  $('#buscaExp').focus();
+}
+
 function entrar(cod) {
-  const x = expositorPorCodigo(cod);
-  if (!x) {
-    const e = $('#errAcceso'); e.textContent = 'No encontramos ese código. Revisa que esté bien escrito (por ejemplo, EXP-1009).'; e.hidden = false;
-    $('#codigoExp').setAttribute('aria-invalid', 'true'); $('#codigoExp').focus();
-    return;
-  }
+  const limpio = String(cod).trim().toUpperCase();
+  if (!limpio) return errorAcceso(elegido ? 'Escribe tu código de acceso para continuar.' : 'Busca tu nombre o escribe tu código de acceso.');
+  const x = expositorPorCodigo(limpio);
+  if (!x) return errorAcceso('No encontramos ese código. Revisa que esté bien escrito (por ejemplo, EXP-1009).');
+  // Si eligió a una persona, el código debe ser de esa persona
+  if (elegido && x.id !== elegido.id) return errorAcceso(`Ese código no corresponde a ${elegido.nombre.replace(/\.$/, '')}. Revisa el correo del comité organizador.`);
+  $('#codigoExp').removeAttribute('aria-invalid');
   Sesion.set('expositor', { id: x.id });
   mostrar();
   avisar(`Hola, ${x.nombre}`);
 }
+
+Autocompletar($('#buscaExp'), {
+  elementos: () => elementosExpositores({ soloConCodigo: true }),
+  alElegir: (item) => elegir(CONGRESO.expositores.find((x) => x.id === item.id)),
+  vacio: 'No encontramos a nadie con esa búsqueda. Prueba con tu apellido o una palabra de tu exposición.',
+});
+$('#btnCambiar').addEventListener('click', cambiar);
 $('#formAcceso').addEventListener('submit', (e) => { e.preventDefault(); entrar($('#codigoExp').value); });
-$('#btnPruebaExp').addEventListener('click', () => { $('#codigoExp').value = PRUEBA; entrar(PRUEBA); });
+// Prototipo: completa el código de la persona elegida (o del expositor de prueba)
+$('#btnPruebaExp').addEventListener('click', () => {
+  if (!elegido) elegir(CONGRESO.expositores.find((x) => x.codigo === PRUEBA));
+  $('#codigoExp').value = elegido.codigo;
+  $('#codigoExp').focus();
+  avisar('Datos de prueba completados. Toca «Entrar».');
+});
 $('#btnSalir').addEventListener('click', () => { Sesion.salir('expositor'); mostrar(); avisar('Sesión cerrada'); });
 
 function faltaTexto(c) {

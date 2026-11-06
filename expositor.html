@@ -26,16 +26,30 @@
     </div>
 
     <section class="acceso card" id="acceso" hidden>
-      <h2>Ingresa con tu código</h2>
+      <h2>Ingresa a tu panel</h2>
       <form class="form" id="formAcceso" novalidate>
-        <label>Código de acceso <small>lo envía el comité organizador</small>
-          <input id="codigoExp" type="text" autocomplete="off" autocapitalize="characters" placeholder="EXP-0000" required>
-        </label>
+        <!-- Paso 1: encontrarse (opcional) -->
+        <div id="pasoBuscar">
+          <label for="buscaExp">Busca tu nombre o tu exposición <small>también sirve tu institución</small></label>
+          <div class="campo campo--ac">
+            <i data-lucide="search"></i>
+            <input id="buscaExp" type="text" placeholder="Ej.: Heredia, Power BI, ingeniería social…" enterkeyhint="search">
+          </div>
+        </div>
+        <!-- Persona elegida -->
+        <div class="elegido" id="elegido" hidden>
+          <span class="avatar" id="elegidoAv" aria-hidden="true"></span>
+          <span class="elegido__txt"><strong id="elegidoNom"></strong><small id="elegidoInst"></small></span>
+          <button class="btn btn--ghost btn--sm" type="button" id="btnCambiar">Cambiar</button>
+        </div>
+        <!-- Paso 2: el código es la llave -->
+        <label for="codigoExp" id="lblCodigo">Código de acceso <small>lo envía el comité organizador</small></label>
+        <input id="codigoExp" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="EXP-0000" required aria-describedby="errAcceso">
         <p class="error" id="errAcceso" role="alert" hidden></p>
-        <button class="btn btn--primary" type="submit">Entrar</button>
-        <button class="btn btn--secondary" type="button" id="btnPruebaExp">Entrar como expositor de prueba</button>
+        <button class="btn btn--primary" type="submit"><i data-lucide="log-in"></i>Entrar</button>
+        <button class="btn btn--secondary" type="button" id="btnPruebaExp">Completar con datos de prueba</button>
       </form>
-      <p class="aviso-demo"><i data-lucide="info"></i><span>Prototipo: el expositor de prueba es <strong>Mg. Isabel Heredia</strong> (código <strong>EXP-1009</strong>). Los códigos de todos los expositores se ven en el panel del organizador.</span></p>
+      <p class="aviso-demo"><i data-lucide="info"></i><span>¿Ya tienes tu código? Escríbelo directamente. Prototipo: los códigos de todos los expositores se ven en el panel del organizador (código <strong>ORG-2026</strong>).</span></p>
     </section>
 
     <div id="panel" hidden></div>
@@ -47,6 +61,7 @@
   <script src="js/ruta.js"></script>
   <script src="js/certificado.js"></script>
   <script src="js/portadas.js"></script>
+  <script src="js/autocompletar.js"></script>
   <script src="js/expositor.js"></script>
 </body>
 </html>
