@@ -39,28 +39,28 @@
   --tab-h: 64px;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0a1712;
-    --surface: #10211a;
-    --surface-2: #162c22;
-    --text: #e6f2ec;
-    --muted: #9cb8aa;
-    --line: #1f3a2d;
-    --line-2: #2f4f3f;
-    --brand: #5ccf99;
-    --brand-hover: #76dbab;
-    --brand-ink: #05261a;
-    --brand-soft: #173d2c;
-    --brand-text: #7fdcb0;
-    --band: #082a1e;
-    --band-2: #0c3a29;
-    --star: #e2a640;
-    --live: #f08a57;
-    --live-soft: #3a2218;
-    --shadow: none;
-    color-scheme: dark;
-  }
+/* Modo oscuro: solo si el usuario lo elige con el botón del encabezado.
+   El modo claro es el principal en todas las pantallas. */
+:root[data-tema="oscuro"] {
+  --bg: #0a1712;
+  --surface: #10211a;
+  --surface-2: #162c22;
+  --text: #e6f2ec;
+  --muted: #9cb8aa;
+  --line: #1f3a2d;
+  --line-2: #2f4f3f;
+  --brand: #5ccf99;
+  --brand-hover: #76dbab;
+  --brand-ink: #05261a;
+  --brand-soft: #173d2c;
+  --brand-text: #7fdcb0;
+  --band: #082a1e;
+  --band-2: #0c3a29;
+  --star: #e2a640;
+  --live: #f08a57;
+  --live-soft: #3a2218;
+  --shadow: none;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -279,3 +279,10 @@ button.link { padding: 0; border: 0; background: none; cursor: pointer; text-ali
 .ac__pista { color: var(--brand-text) !important; }
 .ac mark { background: color-mix(in srgb, var(--star) 28%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
 .ac__vacio { padding: 14px; color: var(--muted); font-size: .92rem; }
+
+/* ---------- Botón de tema (claro / oscuro) ---------- */
+.tema-btn { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer;
+  color: var(--band-text); background: transparent; border: 1px solid var(--band-line); transition: background .15s, border-color .15s; }
+.tema-btn:hover { border-color: var(--band-accent); background: rgba(255, 255, 255, .06); }
+.tema-btn svg { width: 19px; height: 19px; }
+.tema-btn[aria-pressed="true"] { color: #ffd166; }

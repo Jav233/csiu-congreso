@@ -166,7 +166,7 @@ a.det__expo:hover { background: var(--surface-2); }
 .pausa--larga .pausa__ico { color: #a86e12; background: color-mix(in srgb, #e2a640 20%, var(--surface)); }
 .pausa--larga .pausa__pill { border-color: color-mix(in srgb, #e2a640 35%, var(--line)); }
 .pausa--larga .pausa__linea { border-top-color: color-mix(in srgb, #e2a640 40%, transparent); }
-@media (prefers-color-scheme: dark) { .pausa--larga .pausa__ico { color: #f0c062; } }
+[data-tema="oscuro"] .pausa--larga .pausa__ico { color: #f0c062; }
 @media (max-width: 760px) {
   .pausa { gap: 10px; }
   .pausa__pill { padding: 6px 14px 6px 6px; }

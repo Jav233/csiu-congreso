@@ -74,6 +74,32 @@ document.addEventListener('click', (e) => {
   abrirBot(b.dataset.bot || '');
 });
 
+// ----- Tema: claro por defecto; oscuro solo si el usuario lo elige -----
+const Tema = {
+  clave: 'csiu.tema',
+  actual() { try { return localStorage.getItem(this.clave) === 'oscuro' ? 'oscuro' : 'claro'; } catch { return 'claro'; } },
+  aplicar(t) {
+    document.documentElement.dataset.tema = t;
+    const b = document.querySelector('[data-tema-btn]');
+    if (b) {
+      const oscuro = t === 'oscuro';
+      b.setAttribute('aria-pressed', String(oscuro));
+      b.setAttribute('aria-label', oscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+      b.title = oscuro ? 'Modo claro' : 'Modo oscuro';
+      b.innerHTML = `<i data-lucide="${oscuro ? 'sun' : 'moon'}"></i>`;
+      iconos();
+    }
+  },
+  alternar() {
+    const t = this.actual() === 'oscuro' ? 'claro' : 'oscuro';
+    try { localStorage.setItem(this.clave, t); } catch { /* sin almacenamiento */ }
+    this.aplicar(t);
+    avisar(t === 'oscuro' ? 'Modo oscuro activado' : 'Modo claro activado');
+  },
+};
+if (document.body.dataset.layout !== 'propio') document.documentElement.dataset.tema = Tema.actual();
+document.addEventListener('click', (e) => { if (e.target.closest('[data-tema-btn]')) Tema.alternar(); });
+
 function montarLayout() {
   const pagina = document.body.dataset.pagina;
   montarBotonBot();
@@ -89,9 +115,11 @@ function montarLayout() {
         <nav class="nav" aria-label="Principal">
           ${SECCIONES.filter((s) => !s.soloMovil).map((s) => `<a href="${s.href}" data-sec="${s.id}">${s.txt}</a>`).join('')}
         </nav>
+        <button class="tema-btn" type="button" data-tema-btn aria-pressed="false" aria-label="Cambiar a modo oscuro" title="Modo oscuro"><i data-lucide="moon"></i></button>
         <a class="btn btn--secondary btn--sm" href="ingresar.html" data-sec="ingresar" aria-label="Ingresar"><i data-lucide="log-in"></i><span class="btn-ingresar-txt">Ingresar</span></a>
       </div>
     </header>`);
+  Tema.aplicar(Tema.actual());
   document.body.insertAdjacentHTML('beforeend', `
     <nav class="tabbar" aria-label="Secciones">
       ${SECCIONES.map((s) => `<a href="${s.href}" data-sec="${s.id}"><i data-lucide="${s.icono}"></i><span>${s.corto || s.txt}</span></a>`).join('')}
