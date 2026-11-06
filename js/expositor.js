@@ -188,4 +188,19 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// «Probar acceso» desde el panel del organizador: expositor.html?codigo=EXP-1009
+// Deja elegida a la persona y su código escrito; falta solo tocar «Entrar».
+{
+  const pedido = new URLSearchParams(location.search).get('codigo');
+  const x = pedido && expositorPorCodigo(pedido);
+  if (x) {
+    if (Sesion.get('expositor')?.id !== x.id) Sesion.salir('expositor');
+    if (!Sesion.get('expositor')) {
+      elegir(x);
+      $('#codigoExp').value = x.codigo;
+      avisar(`Acceso de ${x.nombre} listo. Toca «Entrar».`, { ms: 4000 });
+    }
+  }
+}
+
 mostrar();

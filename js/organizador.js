@@ -191,19 +191,100 @@ function formActividad(c) {
 }
 
 // ---------- Expositores ----------
+const filtroExp = { q: '', origen: '' };
+const esLocalExp = (x) => /PUCESA|PUCE|alumni/i.test(x.institucion);
+const actsDe = (x) => {
+  const cs = CONGRESO.charlas.filter((c) => c.exp.includes(x.id) && !esReceso(c)).sort((a, b) => a.dia - b.dia || aMin(a.ini) - aMin(b.ini));
+  return cs.filter((c, i) => cs.findIndex((o) => o.titulo === c.titulo) === i);
+};
+
 function pintarExpositores() {
+  const personas = CONGRESO.expositores.filter((x) => !x.grupo);
+  const inst = new Set(personas.map((x) => x.institucion)).size;
+  const inv = personas.filter((x) => !esLocalExp(x)).length;
+  const grupos = CONGRESO.expositores.length - personas.length;
   $('[data-panel="expositores"]').innerHTML = `
-    <div class="barra-acc"><button class="btn btn--primary" type="button" data-nuevo-exp><i data-lucide="user-plus"></i>Nuevo expositor</button></div>
-    <ul class="gestion card">${CONGRESO.expositores.map((x) => {
-      const n = CONGRESO.charlas.filter((c) => c.exp.includes(x.id)).length;
-      return `<li>
-        <span class="avatar" aria-hidden="true">${x.grupo ? '<i data-lucide="users"></i>' : iniciales(x.nombre)}</span>
-        <span class="gestion__txt"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.institucion)} · ${n} ${n === 1 ? 'actividad' : 'actividades'}${x.codigo ? ` · Código: ${x.codigo}` : ''}</small></span>
-        <span class="gestion__acc">
-          <button class="btn btn--secondary btn--icon" type="button" data-editar-exp="${x.id}" aria-label="Editar a ${escapar(x.nombre)}"><i data-lucide="pencil"></i></button>
-          <button class="btn btn--peligro btn--icon" type="button" data-borrar-exp="${x.id}" aria-label="Eliminar a ${escapar(x.nombre)}"><i data-lucide="trash-2"></i></button>
-        </span></li>`;
-    }).join('')}</ul>`;
+    <ul class="xc-cifras">
+      <li><i data-lucide="mic"></i><strong>${personas.length}</strong><span>expositores</span></li>
+      <li><i data-lucide="plane"></i><strong>${inv}</strong><span>invitados externos</span></li>
+      <li><i data-lucide="landmark"></i><strong>${inst}</strong><span>instituciones</span></li>
+      <li><i data-lucide="users"></i><strong>${grupos}</strong><span>grupos</span></li>
+    </ul>
+    <div class="xc-barra">
+      <label class="campo xc-buscar"><i data-lucide="search"></i><span class="sr-only">Buscar expositor</span>
+        <input id="qExp" type="search" placeholder="Buscar por nombre, institución, código o ponencia" value="${escapar(filtroExp.q)}" autocomplete="off"></label>
+      <div class="segmento xc-filtros" role="group" aria-label="Filtrar expositores">
+        ${[['', 'Todos'], ['invitados', 'Invitados'], ['pucesa', 'PUCESA'], ['grupos', 'Grupos']].map(([v, t]) =>
+          `<button type="button" data-filtro-exp="${v}" aria-pressed="${filtroExp.origen === v}">${t}</button>`).join('')}
+      </div>
+      <div class="xc-acc-barra">
+        <button class="btn btn--secondary btn--sm" type="button" data-copiar-todos><i data-lucide="clipboard-list"></i>Copiar todos los códigos</button>
+        <button class="btn btn--primary btn--sm" type="button" data-nuevo-exp><i data-lucide="user-plus"></i>Nuevo expositor</button>
+      </div>
+    </div>
+    <p class="xc-resumen" id="resExp" aria-live="polite"></p>
+    <div class="xc-grid" id="gridExp"></div>`;
+  pintarGridExp();
+  $('#qExp').addEventListener('input', (e) => { filtroExp.q = e.target.value; pintarGridExp(); });
+}
+
+function pintarGridExp() {
+  const q = normal(filtroExp.q.trim());
+  const lista = CONGRESO.expositores.filter((x) => {
+    if (filtroExp.origen === 'grupos' && !x.grupo) return false;
+    if (filtroExp.origen === 'invitados' && (x.grupo || esLocalExp(x))) return false;
+    if (filtroExp.origen === 'pucesa' && (x.grupo || !esLocalExp(x))) return false;
+    if (!q) return true;
+    const texto = normal([x.nombre, x.institucion, x.codigo || '', ...actsDe(x).map((c) => c.titulo)].join(' '));
+    return q.split(/\s+/).every((p) => texto.includes(p));
+  });
+  $$('[data-filtro-exp]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filtroExp === filtroExp.origen)));
+  $('#resExp').textContent = `${lista.length} ${lista.length === 1 ? 'resultado' : 'resultados'}`;
+  $('#gridExp').innerHTML = lista.length ? lista.map(tarjetaExp).join('')
+    : '<div class="vacio"><i data-lucide="search-x"></i><p>No hay expositores con esa búsqueda.</p></div>';
+  iconos();
+}
+
+function tarjetaExp(x) {
+  const acts = actsDe(x);
+  const ar = areaDe(acts[0]?.area);
+  const portada = typeof Portadas !== 'undefined' && acts[0] ? Portadas.svg(acts[0]) : '';
+  const etiqueta = x.grupo ? '<span class="xc-tag xc-tag--grupo"><i data-lucide="users"></i>Grupo</span>'
+    : esLocalExp(x) ? '<span class="xc-tag"><i data-lucide="school"></i>PUCESA</span>'
+    : '<span class="xc-tag xc-tag--inv"><i data-lucide="plane"></i>Invitado</span>';
+  return `<article class="xc${x.grupo ? ' xc--grupo' : ''}" style="--c:${ar.color}">
+    <div class="xc__img">${portada}<div class="xc__tags">${etiqueta}<span class="xc-tag">${acts.length} ${acts.length === 1 ? 'ponencia' : 'ponencias'}</span></div></div>
+    <div class="xc__cuerpo">
+      <div class="xc__id">
+        <span class="xc__avatar" aria-hidden="true">${x.grupo ? '<i data-lucide="users"></i>' : iniciales(x.nombre)}</span>
+        <div><h3>${escapar(x.nombre)}</h3><p>${escapar(x.institucion)}</p></div>
+      </div>
+      ${x.codigo ? `<div class="xc__codigo">
+          <span class="xc__codigo-lbl"><i data-lucide="key-round"></i>Código de acceso</span>
+          <code>${x.codigo}</code>
+          <button class="xc__copiar" type="button" data-copiar="${x.codigo}" aria-label="Copiar el código de ${escapar(x.nombre)}" title="Copiar código"><i data-lucide="copy"></i></button>
+        </div>`
+        : '<p class="xc__nota"><i data-lucide="info"></i>Es un grupo: no tiene panel ni código propio.</p>'}
+      <ul class="xc__acts">${acts.slice(0, 3).map((c) => {
+        const a = areaDe(c.area);
+        return `<li style="--c:${a.color}"><span class="xc__dot" aria-hidden="true"></span><span class="xc__act-t">${escapar(c.titulo)}</span><small>${diaCorto(c.dia).split(' ')[0]} ${c.ini}</small></li>`;
+      }).join('')}${acts.length > 3 ? `<li class="xc__mas">+${acts.length - 3} más</li>` : ''}${acts.length ? '' : '<li class="xc__mas">Sin ponencias asignadas</li>'}</ul>
+      <div class="xc__acc">
+        ${x.codigo ? `<a class="btn btn--primary btn--sm" href="expositor.html?codigo=${x.codigo}" target="_blank" rel="noopener"><i data-lucide="log-in"></i>Probar acceso<span class="sr-only"> (se abre en otra pestaña)</span></a>` : ''}
+        <button class="btn btn--secondary btn--sm" type="button" data-editar-exp="${x.id}"><i data-lucide="pencil"></i>Editar<span class="sr-only"> a ${escapar(x.nombre)}</span></button>
+        <button class="btn btn--peligro btn--icon btn--sm" type="button" data-borrar-exp="${x.id}" aria-label="Eliminar a ${escapar(x.nombre)}" title="Eliminar"><i data-lucide="trash-2"></i></button>
+      </div>
+    </div>
+  </article>`;
+}
+
+// Copiar al portapapeles (con alternativa para navegadores antiguos)
+async function copiar(texto) {
+  try { await navigator.clipboard.writeText(texto); return true; } catch {
+    const t = document.createElement('textarea'); t.value = texto; t.style.cssText = 'position:fixed;opacity:0';
+    document.body.append(t); t.select();
+    const ok = document.execCommand?.('copy'); t.remove(); return !!ok;
+  }
 }
 
 function formExpositor(x) {
@@ -319,6 +400,22 @@ document.addEventListener('click', (e) => {
     const copia = { ...c }, pos = CONGRESO.charlas.indexOf(c);
     CONGRESO.charlas.splice(pos, 1); DatosEditables.guardar(); pintar();
     return avisar('Actividad eliminada', { accion: 'Deshacer', alHacer: () => { CONGRESO.charlas.splice(pos, 0, copia); DatosEditables.guardar(); pintar(); } });
+  }
+  const fe = t.closest('[data-filtro-exp]'); if (fe) { filtroExp.origen = fe.dataset.filtroExp; return pintarGridExp(); }
+  const cp = t.closest('[data-copiar]');
+  if (cp) {
+    copiar(cp.dataset.copiar).then((ok) => {
+      if (!ok) return avisar(`No se pudo copiar. El código es ${cp.dataset.copiar}`, { ms: 5000 });
+      avisar(`Código ${cp.dataset.copiar} copiado`);
+      cp.classList.add('is-ok'); cp.innerHTML = '<i data-lucide="check"></i>'; iconos();
+      setTimeout(() => { cp.classList.remove('is-ok'); cp.innerHTML = '<i data-lucide="copy"></i>'; iconos(); }, 1600);
+    });
+    return;
+  }
+  if (t.closest('[data-copiar-todos]')) {
+    const texto = CONGRESO.expositores.filter((x) => x.codigo).map((x) => `${x.nombre} — ${x.institucion} — ${x.codigo}`).join('\n');
+    copiar(texto).then((ok) => avisar(ok ? 'Lista de códigos copiada. Pégala en un correo o documento.' : 'No se pudo copiar la lista', { ms: 4000 }));
+    return;
   }
   if (t.closest('[data-nuevo-exp]')) return formExpositor();
   const ee = t.closest('[data-editar-exp]'); if (ee) return formExpositor(CONGRESO.expositores.find((x) => x.id === +ee.dataset.editarExp));
